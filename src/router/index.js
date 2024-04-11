@@ -17,7 +17,14 @@ export const constantRoutes = [
   {
     path: '/layout',
     component: () => import('@/layout/index'),
-    hidden: true
+    hidden: true,
+    children: [
+      {
+        path: '/layout/sys/item',
+        component: () => import('@/views/sys/index'),
+        hidden: true
+      }
+    ]
   },
   {
     path: '/404',

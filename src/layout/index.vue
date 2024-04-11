@@ -1,14 +1,23 @@
 <template>
-  <div class="app-wrapper">
-    <el-menu
-      router="true"
-      class="el-menu-vertical-demo"
-      default-active="2"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-      <sub-menu :modules="modules"/>
-    </el-menu>
+  <div>
+    <el-container>
+      <el-aside style="height: 100vh; background-color: #545c64" class="">
+        <el-menu
+          router="true"
+          default-active="2"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <sub-menu :modules="modules"/>
+        </el-menu>
+      </el-aside>
+      <el-container>
+        <el-header>Header</el-header>
+        <el-main style="flex: fit-content; background-color: #3b91b6">
+          <router-view/>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
@@ -44,13 +53,23 @@ export default {
 
 <style lang="scss" scoped>
 
-.app-wrapper {
-  height: 100%;
-  width: 15%;
+.el-container {
+  display: flex;
 }
 
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  min-height: 400px;
+.el-main {
+  display: flex;
+}
+
+body > .el-container {
+  margin-bottom: 0px;
+}
+
+.el-container,
+.el-aside,
+.el-menu,
+.el-menu-item,
+.el-submenu {
+  border: none !important;
 }
 </style>
