@@ -19,46 +19,7 @@ import SubMenu from '@/layout/components/SubMenu.vue'
 export default {
   name: 'LayoutView',
   data () {
-    return {
-      modules: [
-        {
-          id: 123,
-          link: '/123',
-          name: '资产管理',
-          end: false,
-          subModules: [
-            {
-              id: 124,
-              link: '/124',
-              name: 'sdfd',
-              end: false,
-              subModules: [
-                {
-                  id: 158,
-                  link: '158',
-                  name: 'dsfd',
-                  end: true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 122,
-          link: '/122',
-          name: '土地资源管理',
-          end: false,
-          subModules: [
-            {
-              id: 125,
-              link: '/1254',
-              name: 'sdfd',
-              end: true
-            }
-          ]
-        }
-      ]
-    }
+    return {}
   },
   created () {
     this.$store.dispatch('user/getModules')
@@ -73,7 +34,9 @@ export default {
     SubMenu
   },
   computed: {
-    ...mapState({})
+    ...mapState({
+      modules: state => state.user.modules
+    })
   },
   methods: {}
 }
@@ -82,7 +45,7 @@ export default {
 <style lang="scss" scoped>
 
 .app-wrapper {
-  height: 500px;
+  height: 100%;
   width: 15%;
 }
 

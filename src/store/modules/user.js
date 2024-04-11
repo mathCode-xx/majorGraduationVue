@@ -88,13 +88,35 @@ const actions = {
     state
   }) {
     return new Promise((resolve, reject) => {
-      getModules(state.token).then(response => {
+      getModules().then(response => {
         const { data } = response
-
-        if (!data) {
-          reject(new Error('Verification failed, please Login again.'))
-        }
         // 处理数据
+        const moduleMap = {}
+        data.forEach(module => {
+          moduleMap[module.moduleId] = module
+        })
+
+        const rootModules = []
+
+        data.forEach(module => {
+          const { upperModuleId } = module
+          if (upperModuleId === 0) {
+            // 顶级模块，直接加入根节点列表
+            rootModules.push(module)
+          } else {
+            // 子模块，找到对应的父模块并添加到父模块的 children 数组中
+            const parentModule = moduleMap[upperModuleId]
+            if (parentModule) {
+              if (!parentModule.children) {
+                parentModule.children = []
+              }
+              parentModule.children.push(module)
+            }
+          }
+        })
+
+        console.log(rootModules)
+        commit('SET_MODULES', rootModules)
         resolve(data)
       }).catch(error => {
         reject(error)

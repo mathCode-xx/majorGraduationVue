@@ -1,9 +1,8 @@
 import request from '@/utils/request'
 
-export function getModules (token) {
+export function getModules () {
   return request({
-    url: '/module/user',
-    method: 'get',
-    params: { token }
+    url: '/module/user/current',
+    method: 'get'
   })
 }
