@@ -4,15 +4,18 @@
       <el-aside style="height: 100vh; background-color: #545c64" class="">
         <el-menu
           router="true"
-          default-active="2"
+          :default-active="currentActive"
           background-color="#545c64"
           text-color="#fff"
+          @select="handleMenuSelect"
           active-text-color="#ffd04b">
           <sub-menu :modules="modules"/>
         </el-menu>
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+          <HeaderComponent/>
+        </el-header>
         <el-main style="flex: fit-content; background-color: #3b91b6">
           <router-view/>
         </el-main>
@@ -24,30 +27,41 @@
 <script>
 import { mapState } from 'vuex'
 import SubMenu from '@/layout/components/SubMenu.vue'
+import HeaderComponent from '@/layout/components/Header.vue'
 
 export default {
   name: 'LayoutView',
   data () {
-    return {}
+    return {
+      currentActive: '' // 当前激活的菜单项
+    }
   },
   created () {
     this.$store.dispatch('user/getModules')
       .then(() => {
-        console.log()
       })
       .catch((e) => {
         console.log(e)
       })
+    // 监听路由变化，更新当前激活的菜单项
+    this.$router.afterEach((to, from) => {
+      this.currentActive = to.path
+    })
   },
   components: {
-    SubMenu
+    SubMenu, HeaderComponent
   },
   computed: {
     ...mapState({
       modules: state => state.user.modules
     })
   },
-  methods: {}
+  methods: {
+    handleMenuSelect (index) {
+      // 处理菜单项选择事件
+      this.currentActive = index
+    }
+  }
 }
 </script>
 

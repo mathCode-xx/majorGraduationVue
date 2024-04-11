@@ -23,6 +23,16 @@ export const constantRoutes = [
         path: '/layout/sys/item',
         component: () => import('@/views/sys/index'),
         hidden: true
+      },
+      {
+        path: '/layout/asset/house',
+        component: () => import('@/views/house/index'),
+        hidden: true
+      },
+      {
+        path: '/layout/asset/land',
+        component: () => import('@/views/land/index'),
+        hidden: true
       }
     ]
   },
