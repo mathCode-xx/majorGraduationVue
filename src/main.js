@@ -2,6 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import Cookies from 'js-cookie'
+
+Vue.use(ElementUI, {
+  size: Cookies.get('size') || 'medium' // set element-ui default size
+})
 
 Vue.config.productionTip = false
 
