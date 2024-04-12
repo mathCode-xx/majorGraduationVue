@@ -1,50 +1,34 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter)
 
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    component: () => import('@/views/login/index')
   },
   {
     path: '/',
-    redirect: '/layout',
-    hidden: true
-  },
-  {
-    path: '/layout',
-    component: () => import('@/layout/index'),
-    hidden: true,
+    name: 'Layout',
+    component: () => import('@/views/layout/index.vue'),
+    redirect: '/home',
     children: [
       {
-        path: '/layout/sys/item',
-        component: () => import('@/views/sys/index'),
-        hidden: true
-      },
-      {
-        path: '/layout/asset/house',
-        component: () => import('@/views/house/index'),
-        hidden: true
-      },
-      {
-        path: '/layout/asset/land',
-        component: () => import('@/views/land/index'),
-        hidden: true
+        path: '/home',
+        meta: { titles: ['首页'] },
+        component: () => import('@/views/home/index.vue')
       }
     ]
   },
   {
     path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
+    component: () => import('@/views/error-page/404')
   },
   {
     path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
+    component: () => import('@/views/error-page/401')
   },
   {
     path: '*',
@@ -53,7 +37,24 @@ export const constantRoutes = [
   }
 ]
 
-export const asyncRoutes = []
+export const mainRoutes = [
+  {
+    path: '/sys/item',
+    component: () => import('@/views/sys/item/index.vue')
+  },
+  {
+    path: '/sys/permission',
+    component: () => import('@/views/sys/permission/index.vue')
+  },
+  {
+    path: '/asset/house',
+    component: () => import('@/views/house/index.vue')
+  },
+  {
+    path: '/asset/land',
+    component: () => import('@/views/land/index.vue')
+  }
+]
 
 const createRouter = () => new VueRouter({
   // mode: 'history', // require service support
@@ -68,5 +69,18 @@ export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+router.beforeEach((to, from, next) => {
+  const hasToken = getToken()
+  if (to.path === 'login' && hasToken) {
+    next('/')
+    return
+  }
+  // if (to.path !== '/login' && !hasToken) {
+  //   next('/login')
+  //   return
+  // }
+  next()
+})
 
 export default router

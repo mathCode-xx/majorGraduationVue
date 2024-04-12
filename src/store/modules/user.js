@@ -1,6 +1,6 @@
-import { login, getInfo } from '@/api/user'
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import router, { resetRouter, mainRoutes } from '@/router'
 import { getModules } from '@/api/module'
 
 const state = {
@@ -37,46 +37,11 @@ const actions = {
         phoneNumber: phoneNumber.trim(),
         password: password
       }).then(response => {
+        resetRouter() // 重置路由
         const { data } = response
         commit('SET_TOKEN', data)
         setToken(data)
         resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // get user info
-  getInfo ({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject(new Error('Verification failed, please Login again.'))
-        }
-
-        const {
-          roles,
-          name,
-          avatar,
-          introduction
-        } = data
-
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject(new Error('getInfo: roles must be a non-null array!'))
-        }
-
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(data)
       }).catch(error => {
         reject(error)
       })
@@ -89,11 +54,14 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       getModules().then(response => {
+        commit('SET_MODULES', [])
         const { data } = response
         // 处理数据
         const moduleMap = {}
+        const componentMap = {}
         data.forEach(module => {
           moduleMap[module.moduleId] = module
+          componentMap[module.url] = module
         })
 
         const rootModules = []
@@ -114,8 +82,23 @@ const actions = {
             }
           }
         })
+        mainRoutes.forEach(_router => {
+          let module = componentMap[_router.path]
+          let meta = [module.name]
+          while (module.upperModuleId !== 0) {
+            module = moduleMap[module.upperModuleId]
+            meta = [...[module.name], ...meta]
+          }
+          if (componentMap[_router.path]) {
+            _router.meta = {
+              titles: meta
+            }
+            console.log(_router)
+            router.addRoute('Layout', _router)
+          }
+        })
 
-        console.log(rootModules)
+        // console.log(rootModules)
         commit('SET_MODULES', rootModules)
         resolve(data)
       }).catch(error => {

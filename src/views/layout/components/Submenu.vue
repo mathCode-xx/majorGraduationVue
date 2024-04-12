@@ -1,12 +1,18 @@
 <template>
   <div>
     <div v-for="(item) in modules" :key="item.id">
-      <el-menu-item class="item" v-if="!item.children" :index="item.url">{{ item.name }}</el-menu-item>
+      <el-menu-item
+        class="item"
+        v-if="!item.children || item.children.length === 0"
+        :index="item.url"
+      >
+        {{ item.name }}
+      </el-menu-item>
       <el-submenu v-else :index="item.moduleId.toString()">
         <template slot="title">
           {{ item.name }}
         </template>
-        <sub-menu :modules="item.children"/>
+        <SubmenuComponent :modules="item.children"/>
       </el-submenu>
     </div>
   </div>
@@ -14,11 +20,17 @@
 
 <script>
 export default {
-  name: 'SubMenu',
+  name: 'SubmenuComponent',
   props: {
     modules: Array
   },
-  methods: {}
+  created () {
+  },
+  methods: {
+    test (modules) {
+      console.log(modules)
+    }
+  }
 }
 </script>
 
