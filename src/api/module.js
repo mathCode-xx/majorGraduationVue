@@ -6,3 +6,11 @@ export function getModules () {
     method: 'get'
   })
 }
+
+export function saveRoleModule (data) {
+  return request({
+    url: '/role/module/batch',
+    method: 'post',
+    data: data
+  })
+}
