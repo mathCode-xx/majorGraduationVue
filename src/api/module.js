@@ -7,10 +7,11 @@ export function getUserModules () {
   })
 }
 
-export function getAllModules () {
+export function getModules (params) {
   return request({
-    url: '/module/all',
-    method: 'get'
+    url: '/module',
+    method: 'get',
+    params
   })
 }
 
@@ -29,5 +30,13 @@ export function deleteModule (params) {
     params: {
       moduleIds: params
     }
+  })
+}
+
+export function saveModule (data) {
+  return request({
+    url: '/module',
+    method: 'post',
+    data
   })
 }

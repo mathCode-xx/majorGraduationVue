@@ -83,7 +83,7 @@
 
 <script>
 import { getAllRoles } from '@/api/sys'
-import { saveRoleModule, deleteModule, getAllModules } from '@/api/module'
+import { saveRoleModule, deleteModule, getModules } from '@/api/module'
 import { Message } from 'element-ui'
 import { dealModules } from '@/utils/module'
 
@@ -234,7 +234,7 @@ export default {
       })
     },
     flushAllModule () {
-      getAllModules().then(response => {
+      getModules().then(response => {
         // console.log(response)
         this.modules = dealModules(response.data)
       })
