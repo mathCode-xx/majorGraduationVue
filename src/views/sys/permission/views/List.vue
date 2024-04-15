@@ -215,19 +215,18 @@ export default {
       saveRoleModule({
         roleIds,
         moduleIds
-      }).then(response => {
-        Message({
-          message: '操作成功',
-          type: 'info',
-          duration: 5 * 1000
-        })
+      }).then(() => {
+        Message.success('操作成功！')
+        // 更新列表
+        this.$store.dispatch('user/getModules').then().catch()
+        this.drawer = false
       }).catch()
     },
     handleRoleSelectionChange (selections) {
       this.currentSelectedRoles = selections
     },
     handleDeleteOne (moduleId) {
-      deleteModule(moduleId).then(response => {
+      deleteModule(moduleId).then(() => {
         Message.success('操作成功！')
         this.flushAllModule()
         this.$store.dispatch('user/getModules').then().catch()
