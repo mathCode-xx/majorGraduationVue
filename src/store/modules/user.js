@@ -1,7 +1,7 @@
 import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter, mainRoutes } from '@/router'
-import { getModules } from '@/api/module'
+import { getUserModules } from '@/api/module'
 
 const state = {
   token: getToken(),
@@ -53,7 +53,7 @@ const actions = {
     state
   }) {
     return new Promise((resolve, reject) => {
-      getModules().then(response => {
+      getUserModules().then(response => {
         commit('SET_MODULES', [])
         const { data } = response
         // 处理数据
@@ -84,6 +84,9 @@ const actions = {
         })
         mainRoutes.forEach(_router => {
           let module = componentMap[_router.path]
+          if (!module) {
+            return
+          }
           let meta = [module.name]
           while (module.upperModuleId !== 0) {
             module = moduleMap[module.upperModuleId]

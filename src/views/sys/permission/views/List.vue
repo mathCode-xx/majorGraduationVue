@@ -33,6 +33,14 @@
           prop="url"
           label="url">
         </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="100">
+          <template slot-scope="scope" v-if="!scope.row.children">
+            <el-button @click="handleDeleteOne(scope.row.moduleId)" type="text" size="small">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <el-drawer
@@ -74,15 +82,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { getAllRoles } from '@/api/sys'
-import { saveRoleModule } from '@/api/module'
+import { saveRoleModule, deleteModule, getAllModules } from '@/api/module'
 import { Message } from 'element-ui'
+import { dealModules } from '@/utils/module'
 
 export default {
   name: 'SysPermissionListView',
   data () {
     return {
+      modules: [],
       drawer: false,
       roles: [
         {}
@@ -93,9 +102,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      modules: state => state.user.modules
-    }),
     sumModuleCount () {
       let ans = 0
       this.modules.forEach(module => {
@@ -106,6 +112,9 @@ export default {
       })
       return ans
     }
+  },
+  created () {
+    this.flushAllModule()
   },
   methods: {
     _toggleRowSelection (module, selected) {
@@ -216,6 +225,19 @@ export default {
     },
     handleRoleSelectionChange (selections) {
       this.currentSelectedRoles = selections
+    },
+    handleDeleteOne (moduleId) {
+      deleteModule(moduleId).then(response => {
+        Message.success('操作成功！')
+        this.flushAllModule()
+        this.$store.dispatch('user/getModules').then().catch()
+      })
+    },
+    flushAllModule () {
+      getAllModules().then(response => {
+        // console.log(response)
+        this.modules = dealModules(response.data)
+      })
     }
   }
 }
