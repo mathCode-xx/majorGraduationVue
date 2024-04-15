@@ -48,7 +48,9 @@ export default {
   },
   methods: {
     goto (path) {
-      this.$router.push(path)
+      if (this.$route.path !== path) {
+        this.$router.push(path)
+      }
     },
     close (index) {
       if (this.tags[index].path === this.$route.path) {
