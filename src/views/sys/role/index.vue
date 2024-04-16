@@ -186,11 +186,18 @@ export default {
             Message.success('操作成功！')
             this.flushData()
             this.changeAddViewShow()
+            this.clearData()
           })
         } else {
           return false
         }
       })
+    },
+    clearData () {
+      this.toSaveRole = {
+        roleName: '',
+        remark: ''
+      }
     }
   }
 }
