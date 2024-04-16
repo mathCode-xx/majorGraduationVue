@@ -53,6 +53,14 @@ export const mainRoutes = [
   {
     path: '/asset/land',
     component: () => import('@/views/land/index.vue')
+  },
+  {
+    path: '/sys/role',
+    component: () => import('@/views/sys/role/index.vue')
+  },
+  {
+    path: '/sys/user',
+    component: () => import('@/views/sys/user/index.vue')
   }
 ]
 
