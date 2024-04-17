@@ -15,13 +15,15 @@
         </el-button>
       </div>
     </div>
-    <div class="sys-role-table">
-      <div v-if="!add">
+    <div class="sys-role-bottom">
+      <div v-if="!add" class="sys-role-bottom-table" style="min-height:0;">
         <el-table
+          height="100%"
           ref="sysPermissionTable"
           :data="roles"
           row-key="roleId"
           border
+          min-height="0"
           highlight-current-row
           @selection-change="handleSelectionChange">
           <el-table-column
@@ -78,6 +80,9 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div class="sys-role-bottom-page" v-if="!add">
+        <el-pagination></el-pagination>
       </div>
       <div v-else class="sys-role-add-form">
         <el-form ref="form" :rules="rules" :model="toSaveRole" label-width="80px">
@@ -208,6 +213,8 @@ export default {
 .sys-role {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .sys-role-header {
     height: 50px;
@@ -217,11 +224,21 @@ export default {
     //justify-content: center;
   }
 
-  .sys-role-table {
+  .sys-role-bottom {
     width: 100%;
-    height: 100%;
+    flex: 1;
     padding-top: 10px;
     padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow:hidden;
+
+    .sys-role-bottom-table {
+      flex:1 1 auto
+    }
+    .sys-role-bottom-page {
+      flex:none
+    }
   }
 
   .sys-role-add-form {

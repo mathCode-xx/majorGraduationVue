@@ -18,6 +18,7 @@ export default {
   background-color: rgba(239, 239, 239, 0.85);
   width: 100%;
   flex: 1;
+  display: flex;
 }
 
 </style>
