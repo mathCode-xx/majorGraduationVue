@@ -15,3 +15,19 @@ export function getInfo (token) {
     params: { token }
   })
 }
+
+export function updateUserInfo (data) {
+  return request({
+    url: 'user',
+    method: 'put',
+    data
+  })
+}
+
+export function deleteUser (params) {
+  return request({
+    url: 'user',
+    method: 'delete',
+    params
+  })
+}

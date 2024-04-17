@@ -19,7 +19,6 @@
       <div v-if="!add" class="sys-role-bottom-table" style="min-height:0;">
         <el-table
           height="100%"
-          ref="sysPermissionTable"
           :data="roles"
           row-key="roleId"
           border

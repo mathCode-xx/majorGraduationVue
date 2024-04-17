@@ -6,3 +6,11 @@ export function getAllRoles () {
     method: 'get'
   })
 }
+
+export function getAllUsers (params) {
+  return request({
+    url: '/user',
+    method: 'get',
+    params
+  })
+}
