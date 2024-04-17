@@ -31,3 +31,11 @@ export function deleteUser (params) {
     params
   })
 }
+
+export function saveUser (data) {
+  return request({
+    url: 'user',
+    method: 'post',
+    data
+  })
+}

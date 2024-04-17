@@ -6,6 +6,7 @@
       </div>
       <div v-else>
         <el-button @click="addViewShow = !addViewShow">返回</el-button>
+        <el-button @click="handleSave">保存</el-button>
       </div>
     </div>
     <div class="sys-user-bottom">
@@ -88,7 +89,20 @@
         </el-pagination>
       </div>
       <div v-else class="sys-user-bottom-form">
-        form
+        <el-form ref="userForm" :rules="userFormRules" :model="toSaveUser" label-width="80px">
+          <el-form-item label="角色名" prop="userName">
+            <el-input v-model="toSaveUser.userName" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="phoneNumber">
+            <el-input v-model="toSaveUser.phoneNumber" placeholder="请输入手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input v-model="toSaveUser.password" placeholder="请输入密码，默认‘110’"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="ensurePassword">
+            <el-input v-model="toSaveUser.ensurePassword" placeholder="请再次输入密码"></el-input>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -96,12 +110,28 @@
 
 <script>
 import { getAllUsers } from '@/api/sys'
-import { deleteUser, updateUserInfo } from '@/api/user'
+import { deleteUser, saveUser, updateUserInfo } from '@/api/user'
 import { Message, MessageBox } from 'element-ui'
+import { validPhoneNumber } from '@/utils/validate'
 
 export default {
   name: 'SysUserView',
   data () {
+    const _checkPhoneNumber = (rule, value, callback) => {
+      if (!value || value === '') {
+        callback(new Error('请输入手机号'))
+      }
+      if (!validPhoneNumber(value)) {
+        callback(new Error('手机号格式错误'))
+      }
+      callback()
+    }
+    const _checkEnsurePassword = (rule, value, callback) => {
+      if (value !== this.toSaveUser.password) {
+        callback(new Error('确认密码与密码不同'))
+      }
+      callback()
+    }
     return {
       addViewShow: false,
       users: [
@@ -115,7 +145,34 @@ export default {
       ],
       pageSize: 100,
       pageNum: 1,
-      sum: 20
+      sum: 20,
+      userFormRules: {
+        userName: [
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur'
+          }
+        ],
+        phoneNumber: [
+          {
+            validator: _checkPhoneNumber,
+            trigger: 'blur'
+          }
+        ],
+        ensurePassword: [
+          {
+            validator: _checkEnsurePassword,
+            trigger: 'blur'
+          }
+        ]
+      },
+      toSaveUser: {
+        userName: '',
+        phoneNumber: '',
+        password: '',
+        ensurePassword: ''
+      }
     }
   },
   created () {
@@ -131,6 +188,9 @@ export default {
         this.users = response.data.records
       })
     },
+    clearData () {
+      this.toSaveUser = {}
+    },
     handleSelectionChange () {
       console.log('sys-user-handleSelectionChange')
     },
@@ -141,7 +201,8 @@ export default {
       }).then(() => {
         Message.success('操作成功！')
         this.flushData()
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     handleDeleteOne (userId) {
       MessageBox.confirm('此操作将永久删除该该用户信息，是否继续？', '提示', {
@@ -155,7 +216,27 @@ export default {
           Message.success('操作成功！')
           this.flushData()
         })
-      }).catch(() => {})
+      }).catch(() => {
+      })
+    },
+    handleSave () {
+      this.$refs.userForm.validate((valid) => {
+        console.log(this)
+        if (valid) {
+          saveUser({
+            userName: this.toSaveUser.userName,
+            password: this.toSaveUser.password === '' ? '110' : this.toSaveUser.password,
+            phoneNumber: this.toSaveUser.phoneNumber
+          }).then(() => {
+            Message.success('操作成功！')
+            this.flushData()
+            this.addViewShow = !this.addViewShow
+            this.clearData()
+          }).catch(() => {})
+        } else {
+          return false
+        }
+      })
     }
   }
 }
