@@ -61,12 +61,12 @@ service.interceptors.response.use(
         return res
       } else {
         Message({
-          message: res.message || 'Error',
+          message: res.message || '网络错误',
           type: 'error',
           duration: 5 * 1000
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.message || '网络错误'))
     } else {
       return res
     }
