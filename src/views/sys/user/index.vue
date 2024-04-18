@@ -9,8 +9,8 @@
         <el-button @click="handleSave">保存</el-button>
       </div>
     </div>
-    <div class="sys-user-bottom">
-      <div v-if="!addViewShow" class="sys-user-bottom-table" style="min-height:0;">
+    <div class="sys-user-bottom" v-if="!addViewShow">
+      <div class="sys-user-bottom-table" style="min-height:0;">
         <el-table
           height="100%"
           :data="users"
@@ -80,15 +80,20 @@
           </el-table-column>
         </el-table>
       </div>
-      <div v-if="!addViewShow" class="sys-user-bottom-page">
+      <div class="sys-user-bottom-page">
         <el-pagination
           small
-          layout="prev, pager, next"
-          :hide-on-single-page="(sum / pageSize) <= 1"
+          layout="sizes, prev, pager, next"
+          :page-sizes="[20, 30, 40, 50]"
+          :page-size="pageSize"
+          @size-change="handlePageSizeChange"
+          @current-change="handlePageNumChange"
           :total="sum">
         </el-pagination>
       </div>
-      <div v-else class="sys-user-bottom-form">
+    </div>
+    <div v-else>
+      <div class="sys-user-bottom-form">
         <el-form ref="userForm" :rules="userFormRules" :model="toSaveUser" label-width="80px">
           <el-form-item label="角色名" prop="userName">
             <el-input v-model="toSaveUser.userName" placeholder="请输入用户名"></el-input>
@@ -143,7 +148,7 @@ export default {
           status: 0
         }
       ],
-      pageSize: 100,
+      pageSize: 20,
       pageNum: 1,
       sum: 20,
       userFormRules: {
@@ -180,12 +185,18 @@ export default {
   },
   methods: {
     flushData () {
+      console.log('current: ' + this.pageNum)
+      console.log('pageSize: ' + this.pageSize)
       getAllUsers({
         current: this.pageNum,
         size: this.pageSize
       }).then(response => {
-        console.log(response.data)
-        this.users = response.data.records
+        // console.log(response.data)
+        const data = response.data
+        this.users = data.records
+        this.pageSize = data.size
+        this.pageNum = data.current
+        this.sum = data.total
       })
     },
     clearData () {
@@ -229,14 +240,25 @@ export default {
             phoneNumber: this.toSaveUser.phoneNumber
           }).then(() => {
             Message.success('操作成功！')
-            this.flushData()
+            // this.flushData()
             this.addViewShow = !this.addViewShow
             this.clearData()
-          }).catch(() => {})
+            this.$forceUpdate()
+            // this.$router.go(0)
+          }).catch(() => {
+          })
         } else {
           return false
         }
       })
+    },
+    handlePageSizeChange (val) {
+      this.pageSize = val
+      this.flushData()
+    },
+    handlePageNumChange (val) {
+      this.pageNum = val
+      this.flushData()
     }
   }
 }
@@ -273,6 +295,10 @@ export default {
 
     .sys-user-bottom-page {
       flex: none
+    }
+
+    .sys-user-bottom-form {
+      width: 50%;
     }
   }
 }

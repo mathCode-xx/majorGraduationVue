@@ -1,15 +1,17 @@
 <template>
-  <div class="sys-permission">
+  <div class="sys-permission-list">
     <div class="listTop">
       <el-button @click="toAddView">新增</el-button>
       <el-button @click="openRoleSelector">授权</el-button>
     </div>
     <div class="sys-permission-table">
       <el-table
+        height="100%"
         ref="sysPermissionTable"
         :data="modules"
         row-key="moduleId"
         border
+        min-height="0"
         highlight-current-row
         @select="handleSelectOneRow"
         @select-all="handleSelectAll"
@@ -244,26 +246,26 @@ export default {
 
 <style lang="less" scoped>
 
-.sys-permission {
+.sys-permission-list {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: rgba(239, 239, 239, 0.85);
 
-  .sys-permission-table {
+  .listTop {
     width: 100%;
-    height: 100%;
-    padding-right: 20px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  .sys-permission-table {
+    flex:1 1 auto;
   }
 
   .roles-table {
     padding: 20px;
   }
-}
-
-.listTop {
-  width: 100%;
-  height: 50px;
-  margin-bottom: 10px;
 }
 
 </style>

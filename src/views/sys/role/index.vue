@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="sys-role-bottom">
-      <div v-if="!add" class="sys-role-bottom-table" style="min-height:0;">
+      <div v-if="!add" class="sys-role-bottom-table">
         <el-table
           height="100%"
           :data="roles"
@@ -79,9 +79,6 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="sys-role-bottom-page" v-if="!add">
-        <el-pagination></el-pagination>
       </div>
       <div v-else class="sys-role-add-form">
         <el-form ref="form" :rules="rules" :model="toSaveRole" label-width="80px">
@@ -234,9 +231,6 @@ export default {
 
     .sys-role-bottom-table {
       flex:1 1 auto
-    }
-    .sys-role-bottom-page {
-      flex:none
     }
   }
 

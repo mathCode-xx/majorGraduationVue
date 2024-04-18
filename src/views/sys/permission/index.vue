@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sys-permission">
     <SysPermissionListView v-if="!openAddView" @setAddViewStatus="setAddViewStatus"></SysPermissionListView>
     <SysPermissionAddView v-else @setAddViewStatus="setAddViewStatus"></SysPermissionAddView>
   </div>
@@ -29,5 +29,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+.sys-permission {
+  width: 100%;
+  display: flex;
+  flex: 1;
+}
 
 </style>
