@@ -260,7 +260,8 @@ export default {
   }
 
   .sys-permission-table {
-    flex:1 1 auto;
+    width: calc(100vw - 250px);
+    height: calc(100vh - 150px);
   }
 
   .roles-table {

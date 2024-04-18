@@ -29,12 +29,15 @@ export default {
   display: flex;
   width: 100%;
   height: 100%;
+  flex-direction: row;
 }
 
 .layout-right {
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: 100%;
+  flex-basis: fill;
 }
 
 </style>

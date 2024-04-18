@@ -22,7 +22,6 @@
           :data="roles"
           row-key="roleId"
           border
-          min-height="0"
           highlight-current-row
           @selection-change="handleSelectionChange">
           <el-table-column
@@ -217,20 +216,21 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    //justify-content: center;
   }
 
   .sys-role-bottom {
     width: 100%;
-    flex: 1;
+    height: 100%;
     padding-top: 10px;
     padding-right: 10px;
     display: flex;
     flex-direction: column;
-    overflow:hidden;
+    overflow: hidden;
 
     .sys-role-bottom-table {
-      flex:1 1 auto
+      width: calc(100vw - 250px);
+      height: calc(100vh - 150px);
+      flex: 1 1 auto
     }
   }
 

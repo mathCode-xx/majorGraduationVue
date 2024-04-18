@@ -86,6 +86,7 @@
           layout="sizes, prev, pager, next"
           :page-sizes="[20, 30, 40, 50]"
           :page-size="pageSize"
+          :current-page="pageNum"
           @size-change="handlePageSizeChange"
           @current-change="handlePageNumChange"
           :total="sum">
@@ -281,8 +282,8 @@ export default {
   }
 
   .sys-user-bottom {
-    width: 100%;
-    flex: 1;
+    width: calc(100vw - 250px);
+    height: calc(100vh - 150px);
     padding-top: 10px;
     padding-right: 10px;
     display: flex;
