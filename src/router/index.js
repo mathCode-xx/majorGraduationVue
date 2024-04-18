@@ -61,6 +61,10 @@ export const mainRoutes = [
   {
     path: '/sys/user',
     component: () => import('@/views/sys/user/index.vue')
+  },
+  {
+    path: '/person',
+    component: () => import('@/views/person/index.vue')
   }
 ]
 
