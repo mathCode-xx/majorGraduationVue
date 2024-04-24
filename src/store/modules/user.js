@@ -1,5 +1,5 @@
 import { login } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setFlushToken } from '@/utils/auth.js'
 import router, { resetRouter, mainRoutes } from '@/router'
 import { getUserModules } from '@/api/module'
 
@@ -39,8 +39,11 @@ const actions = {
       }).then(response => {
         resetRouter() // 重置路由
         const { data } = response
-        commit('SET_TOKEN', data)
-        setToken(data)
+        const token = data.token
+        const flushToken = data.flushToken
+        commit('SET_TOKEN', token)
+        setToken(token)
+        setFlushToken(flushToken)
         resolve()
       }).catch(error => {
         reject(error)
@@ -118,29 +121,6 @@ const actions = {
       removeToken()
       resolve()
     })
-  },
-
-  // dynamically modify permissions
-  async changeRoles ({
-    commit,
-    dispatch
-  }, role) {
-    const token = role + '-token'
-
-    commit('SET_TOKEN', token)
-    setToken(token)
-
-    const { roles } = await dispatch('getInfo')
-
-    resetRouter()
-
-    // generate accessible routes map based on roles
-    const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // dynamically add accessible routes
-    router.addRoutes(accessRoutes)
-
-    // reset visited views and cached views
-    dispatch('tagsView/delAllViews', null, { root: true })
   }
 }
 

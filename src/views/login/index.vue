@@ -56,6 +56,7 @@
 
 <script>
 import { validPhoneNumber } from '@/utils/validate'
+import { startFlushTask } from '@/utils/token'
 
 export default {
   name: 'LoginView',
@@ -131,6 +132,8 @@ export default {
                 path: this.redirect || '/',
                 query: this.otherQuery
               })
+              // 启动定时任务监听token是否过期
+              startFlushTask()
               this.loading = false
             })
             .catch(() => {

@@ -5,12 +5,17 @@
 </template>
 
 <script>
+import { startFlushTask } from '@/utils/token'
+
 export default {
   name: 'App',
+  created () {
+    // 启动定时任务
+    startFlushTask()
+  },
   data () {
   },
-  components: {
-  }
+  components: {}
 }
 </script>
 

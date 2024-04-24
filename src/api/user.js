@@ -39,3 +39,27 @@ export function saveUser (data) {
     data
   })
 }
+
+export function getCurrentInfo () {
+  return request({
+    url: '/user/current',
+    method: 'get'
+  })
+}
+
+export function checkUserToken () {
+  return request({
+    url: '/user/token',
+    method: 'get'
+  })
+}
+
+export function flushToke (flushToken) {
+  return request({
+    url: '/user/token',
+    method: 'put',
+    headers: {
+      flushToken
+    }
+  })
+}
