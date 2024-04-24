@@ -4,7 +4,8 @@ import { MessageBox } from 'element-ui'
 import router from '@/router'
 import store from '@/store'
 
-const MIN_TIME = 3 * 60 * 1000
+// 如果token持续时间小于MIN_TIME秒则刷新
+const MIN_TIME = 3 * 60
 
 let flushTaskId
 
@@ -72,6 +73,7 @@ function needFlushToken (token) {
   const currentTime = Math.floor(Date.now() / 1000) // 当前时间戳（单位：秒）
   // 如果剩余时间小于MIN_TIME则返回false
   console.log('token过期时间' + expirationTime)
+  console.log('当前时间' + currentTime)
   return (expirationTime - currentTime) <= MIN_TIME
 }
 
