@@ -56,7 +56,7 @@
 
 <script>
 import { validPhoneNumber } from '@/utils/validate'
-import { startFlushTask } from '@/utils/token'
+import { clearFlushTask, startFlushTask } from '@/utils/token'
 
 export default {
   name: 'LoginView',
@@ -87,6 +87,9 @@ export default {
       redirect: undefined,
       otherQuery: {}
     }
+  },
+  created () {
+    clearFlushTask()
   },
   watch: {
     $route: {

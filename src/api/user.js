@@ -47,13 +47,6 @@ export function getCurrentInfo () {
   })
 }
 
-export function checkUserToken () {
-  return request({
-    url: '/user/token',
-    method: 'get'
-  })
-}
-
 export function flushToke (flushToken) {
   return request({
     url: '/user/token',
