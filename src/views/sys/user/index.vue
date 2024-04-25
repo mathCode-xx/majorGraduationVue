@@ -1,15 +1,11 @@
 <template>
   <div class="sys-user">
     <div class="sys-user-header">
-      <div v-if="!addViewShow">
+      <div>
         <el-button @click="addViewShow = !addViewShow">新增</el-button>
       </div>
-      <div v-else>
-        <el-button @click="addViewShow = !addViewShow">返回</el-button>
-        <el-button @click="handleSave">保存</el-button>
-      </div>
     </div>
-    <div class="sys-user-bottom" v-if="!addViewShow">
+    <div class="sys-user-bottom">
       <div class="sys-user-bottom-table" style="min-height:0;">
         <el-table
           height="100%"
@@ -93,8 +89,11 @@
         </el-pagination>
       </div>
     </div>
-    <div v-else>
-      <div class="sys-user-bottom-form">
+    <el-dialog
+      title="新增用户"
+      :visible.sync="addViewShow"
+      width="30%">
+      <div>
         <el-form ref="userForm" :rules="userFormRules" :model="toSaveUser" label-width="80px">
           <el-form-item label="角色名" prop="userName">
             <el-input v-model="toSaveUser.userName" placeholder="请输入用户名"></el-input>
@@ -110,7 +109,15 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addViewShow = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="handleSave">
+          提 交
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
