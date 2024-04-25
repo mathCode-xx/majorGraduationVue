@@ -16,11 +16,17 @@ export function removeToken () {
 }
 
 export function setFlushToken (flushToken) {
+  localStorage.setItem(FlushTokenKey, flushToken)
   return Cookies.set(FlushTokenKey, flushToken)
 }
 
 export function getFlushToken () {
-  return Cookies.get(FlushTokenKey)
+  let flushToke = Cookies.get(FlushTokenKey)
+  if (!flushToke || flushToke === 0) {
+    flushToke = localStorage.getItem(FlushTokenKey)
+    setFlushToken(flushToke)
+  }
+  return flushToke
 }
 
 export function removeFlushToken () {
