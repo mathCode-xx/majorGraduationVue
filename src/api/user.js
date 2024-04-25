@@ -56,3 +56,23 @@ export function flushToke (flushToken) {
     }
   })
 }
+
+export function checkPhoneExist (phoneNumber) {
+  return request({
+    url: '/user/check/phone',
+    method: 'get',
+    params: {
+      phoneNumber
+    }
+  })
+}
+
+export function checkIdCardExist (idCard) {
+  return request({
+    url: '/user/check/idCard',
+    method: 'get',
+    params: {
+      idCard
+    }
+  })
+}

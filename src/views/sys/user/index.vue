@@ -101,11 +101,20 @@
           <el-form-item label="手机号" prop="phoneNumber">
             <el-input v-model="toSaveUser.phoneNumber" placeholder="请输入手机号"></el-input>
           </el-form-item>
+          <el-form-item label="身份证号" prop="idCard">
+            <el-input v-model="toSaveUser.idCard" placeholder="请输入身份证号"></el-input>
+          </el-form-item>
+          <el-form-item label="个人邮箱" prop="email">
+            <el-input v-model="toSaveUser.email" placeholder="请输入个人邮箱"></el-input>
+          </el-form-item>
+          <el-form-item label="个人微信" prop="wechatId">
+            <el-input v-model="toSaveUser.wechatId" placeholder="请输入个人微信"></el-input>
+          </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="toSaveUser.password" placeholder="请输入密码，默认‘110’"></el-input>
+            <el-input type="password" v-model="toSaveUser.password" placeholder="请输入密码，默认‘110’"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="ensurePassword">
-            <el-input v-model="toSaveUser.ensurePassword" placeholder="请再次输入密码"></el-input>
+            <el-input type="password" v-model="toSaveUser.ensurePassword" placeholder="请再次输入密码"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -123,27 +132,54 @@
 
 <script>
 import { getAllUsers } from '@/api/sys'
-import { deleteUser, saveUser, updateUserInfo } from '@/api/user'
+import { checkIdCardExist, checkPhoneExist, deleteUser, saveUser, updateUserInfo } from '@/api/user'
 import { Message, MessageBox } from 'element-ui'
-import { validPhoneNumber } from '@/utils/validate'
+import { validPhoneNumber, validIdCard } from '@/utils/validate'
 
 export default {
   name: 'SysUserView',
   data () {
     const _checkPhoneNumber = (rule, value, callback) => {
-      if (!value || value === '') {
-        callback(new Error('请输入手机号'))
-      }
       if (!validPhoneNumber(value)) {
         callback(new Error('手机号格式错误'))
+        return
       }
-      callback()
+      setTimeout(() => {
+        checkPhoneExist(value).then((response) => {
+          console.log(response)
+          if (response.data && response.data === true) {
+            callback(new Error('手机号已注册'))
+          } else {
+            callback()
+          }
+        }).catch(() => {
+          callback(new Error('网络错误'))
+        })
+      }, 1000)
     }
     const _checkEnsurePassword = (rule, value, callback) => {
       if (value !== this.toSaveUser.password) {
         callback(new Error('确认密码与密码不同'))
       }
       callback()
+    }
+    const _checkIdCard = (rule, value, callback) => {
+      if (!validIdCard(value)) {
+        callback(new Error('身份证格式不正确'))
+        return
+      }
+      setTimeout(() => {
+        checkIdCardExist(value).then((response) => {
+          console.log(response)
+          if (response.data && response.data === true) {
+            callback(new Error('该身份证已注册'))
+          } else {
+            callback()
+          }
+        }).catch(() => {
+          callback(new Error('网络错误'))
+        })
+      }, 1000)
     }
     return {
       addViewShow: false,
@@ -169,6 +205,11 @@ export default {
         ],
         phoneNumber: [
           {
+            required: true,
+            message: '请输入手机号',
+            trigger: 'blur'
+          },
+          {
             validator: _checkPhoneNumber,
             trigger: 'blur'
           }
@@ -178,13 +219,27 @@ export default {
             validator: _checkEnsurePassword,
             trigger: 'blur'
           }
+        ],
+        idCard: [
+          {
+            required: true,
+            message: '请输入身份证号',
+            trigger: 'blur'
+          },
+          {
+            validator: _checkIdCard,
+            trigger: 'blur'
+          }
         ]
       },
       toSaveUser: {
         userName: '',
         phoneNumber: '',
         password: '',
-        ensurePassword: ''
+        ensurePassword: '',
+        idCard: '',
+        email: '',
+        wechatId: ''
       }
     }
   },
@@ -245,14 +300,17 @@ export default {
           saveUser({
             userName: this.toSaveUser.userName,
             password: this.toSaveUser.password === '' ? '110' : this.toSaveUser.password,
-            phoneNumber: this.toSaveUser.phoneNumber
+            phoneNumber: this.toSaveUser.phoneNumber,
+            idCard: this.toSaveUser.idCard,
+            email: this.toSaveUser.email,
+            wechatId: this.toSaveUser.wechatId
           }).then(() => {
             Message.success('操作成功！')
             // this.flushData()
             this.addViewShow = !this.addViewShow
             this.clearData()
             this.$forceUpdate()
-            // this.$router.go(0)
+            this.flushData()
           }).catch(() => {
           })
         } else {
