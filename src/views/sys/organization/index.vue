@@ -86,8 +86,7 @@
     <el-dialog
       title="新增机构"
       :visible.sync="addDialogVisible"
-      width="30%"
-      :before-close="handleClose">
+      width="30%">
       <div>
         <el-form
           :model="addForm"
@@ -241,14 +240,6 @@ export default {
       }).catch(e => {
         Message.error(e)
       })
-    },
-    handleClose (done) {
-      // this.$confirm('确认关闭？')
-      //   .then(_ => {
-      done()
-      //   })
-      //   .catch(_ => {
-      //   })
     },
     openAddDialog () {
       this.addFormDisable = false
