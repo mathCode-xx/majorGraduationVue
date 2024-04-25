@@ -37,8 +37,7 @@
 </template>
 
 <script>
-import { getCurrentInfo } from '@/api/user'
-
+import { getUserFromToken } from '@/utils/token'
 export default {
   name: 'PersonCenterView',
   created () {
@@ -59,10 +58,7 @@ export default {
   },
   methods: {
     flushPersonInfo () {
-      getCurrentInfo().then(resp => {
-        console.log(resp)
-        this.personInfo = resp.data
-      })
+      this.personInfo = getUserFromToken()
     },
     changeToUpdate () {
       this.updating = true

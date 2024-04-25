@@ -48,6 +48,12 @@ export function checkToken () {
   }
 }
 
+export function getUserFromToken () {
+  const payload = parseJwt(getToken())
+  const userJson = payload.user
+  return JSON.parse(userJson)
+}
+
 function parseJwt (token) {
   try {
     const base64Url = token.split('.')[1] // 解码第二部分（载荷部分）
