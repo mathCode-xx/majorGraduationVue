@@ -84,7 +84,7 @@
       </el-table>
     </div>
     <el-dialog
-      title="新增机构"
+      :title="dialogTitle"
       :visible.sync="addDialogVisible"
       width="30%">
       <div>
@@ -202,7 +202,8 @@ export default {
         managerName: ''
       },
       dataLoading: false,
-      addFormDisable: false
+      addFormDisable: false,
+      dialogTitle: '新增机构'
     }
   },
   created () {
@@ -242,6 +243,7 @@ export default {
       })
     },
     openAddDialog () {
+      this.dialogTitle = '新增机构'
       this.addFormDisable = false
       this.addDialogVisible = true
       this.addForm = {}
@@ -318,8 +320,8 @@ export default {
       this.flushDataWithParams(this.searchForm)
     },
     handleUpdateOne (data) {
-      console.log(data)
       this.openAddDialog()
+      this.dialogTitle = '修改机构信息'
       this.addForm = data
       if (!data.manager) {
         this.addForm.managerId = ''
