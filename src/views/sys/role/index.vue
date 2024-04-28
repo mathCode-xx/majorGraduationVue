@@ -1,22 +1,14 @@
 <template>
   <div class="sys-role">
     <div class="sys-role-header">
-      <div v-if="!add">
+      <div>
         <el-button @click="changeAddViewShow">
           新增
         </el-button>
       </div>
-      <div v-else>
-        <el-button @click="changeAddViewShow">
-          返回
-        </el-button>
-        <el-button @click="handleSave">
-          保存
-        </el-button>
-      </div>
     </div>
     <div class="sys-role-bottom">
-      <div v-if="!add" class="sys-role-bottom-table">
+      <div class="sys-role-bottom-table">
         <el-table
           height="100%"
           :data="roles"
@@ -79,8 +71,19 @@
           </el-table-column>
         </el-table>
       </div>
-      <div v-else class="sys-role-add-form">
-        <el-form ref="form" :rules="rules" :model="toSaveRole" label-width="80px">
+    </div>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="addDialogVisible"
+      width="30%">
+      <div>
+        <el-form
+          :model="toSaveRole"
+          :rules="roleAddRules"
+          ref="addForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="角色名" prop="roleName">
             <el-input v-model="toSaveRole.roleName" placeholder="请输入角色名"></el-input>
           </el-form-item>
@@ -89,7 +92,15 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="handleSaveOrUpdateOrganization">
+          提 交
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -128,19 +139,20 @@ export default {
           status: 0
         }
       ],
-      add: false,
       toSaveRole: {
         roleName: '',
         remark: ''
       },
-      rules: {
+      roleAddRules: {
         roleName: [
           {
             validator: _checkRoleName,
             trigger: 'blur'
           }
         ]
-      }
+      },
+      dialogTitle: '新增角色',
+      addDialogVisible: false
     }
   },
   created () {
@@ -177,10 +189,10 @@ export default {
       })
     },
     changeAddViewShow () {
-      this.add = !this.add
+      this.addDialogVisible = !this.addDialogVisible
     },
-    handleSave () {
-      this.$refs.form.validate((valid) => {
+    handleSaveOrUpdateOrganization () {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           saveRole(this.toSaveRole).then(() => {
             Message.success('操作成功！')
